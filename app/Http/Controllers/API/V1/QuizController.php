@@ -17,7 +17,7 @@ class QuizController extends Controller
    */
   public function index()
   {
-    return QuizResource::collection(Quiz::latest()->get());
+    return QuizResource::collection(Quiz::with('questions', 'course')->latest()->get());
   }
 
   /**
@@ -30,7 +30,7 @@ class QuizController extends Controller
   {
     $validated = $request->validate([
       'title' => 'required|string',
-      'description' => 'required|text',
+      'description' => 'required|string',
       'course_id' => 'required|integer|exists:courses,id',
     ]);
 
@@ -64,7 +64,7 @@ class QuizController extends Controller
   {
     $validated = $request->validate([
       'title' => 'required|string',
-      'description' => 'required|text',
+      'description' => 'required|string',
       'course_id' => 'required|integer|exists:courses,id',
     ]);
 

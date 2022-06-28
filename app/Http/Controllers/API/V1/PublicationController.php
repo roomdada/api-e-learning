@@ -29,7 +29,7 @@ class PublicationController extends Controller
   public function store(Request $request): JsonResponse
   {
     $validated = $request->validate([
-      'publication' => 'required|text',
+      'publication' => 'required|string',
     ]);
 
     $publication = auth()->user()->publications()->create($validated);
@@ -61,7 +61,7 @@ class PublicationController extends Controller
   public function update(Request $request, Publication $publication): JsonResponse
   {
     $validated = $request->validate([
-      'publication' => 'required|text',
+      'publication' => 'required|string',
     ]);
 
     $publication->update($validated);

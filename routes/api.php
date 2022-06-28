@@ -10,7 +10,11 @@ use App\Http\Controllers\API\V1\AnswerController;
 use App\Http\Controllers\API\V1\CourseController;
 use App\Http\Controllers\API\V1\LessonController;
 use App\Http\Controllers\API\V1\ModuleController;
+use App\Http\Controllers\API\V1\CountryController;
 use App\Http\Controllers\API\V1\BookShopController;
+use App\Http\Controllers\API\V1\CategoryController;
+use App\Http\Controllers\API\V1\QuestionController;
+use App\Http\Controllers\API\V1\PublicationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -37,8 +41,11 @@ Route::middleware('auth:sanctum')->group(function () {
   Route::apiResource('lessons', LessonController::class);
   Route::apiResource('modules', ModuleController::class);
   Route::apiResource('contacts', ContactController::class);
-  Route::apiResource('bookshop', BookShopController::class);
+  Route::apiResource('bookshops', BookShopController::class);
   Route::apiResource('roles', RoleController::class);
+  Route::apiResource('categories', CategoryController::class);
+  Route::apiResource('countries', CountryController::class);
+  Route::apiResource('questions', QuestionController::class);
 });
 
 

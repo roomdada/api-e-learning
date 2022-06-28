@@ -48,7 +48,7 @@ class BookShopController extends Controller
    */
   public function show(BookShop $bookShop)
   {
-    return new BookShopResource($bookShop->load('user'));
+    return new BookShopResource($bookShop);
   }
 
   /**

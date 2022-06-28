@@ -17,7 +17,7 @@ class LessonController extends Controller
    */
   public function index()
   {
-    return LessonResource::collection(Lesson::latest()->get());
+    return LessonResource::collection(Lesson::with('module')->latest()->get());
   }
 
   /**

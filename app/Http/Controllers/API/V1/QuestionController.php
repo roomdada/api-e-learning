@@ -29,7 +29,7 @@ class QuestionController extends Controller
     public function store(Request $request) : JsonResponse
     {
         $validated = $request->validate([
-            'wording' => 'required|text',
+            'wording' => 'required|string',
             'quiz_id' => 'required|integer|exists:quizzes,id',
         ]);
 
@@ -61,7 +61,7 @@ class QuestionController extends Controller
     public function update(Request $request, Question $question) : JsonResponse
     {
         $validated = $request->validate([
-            'wording' => 'required|text',
+            'wording' => 'required|string',
             'quiz_id' => 'required|integer|exists:quizzes,id',
         ]);
 
