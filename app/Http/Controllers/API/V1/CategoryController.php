@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class CategoryController extends Controller
 {
@@ -15,7 +17,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        //
+        return CategoryResource::collection(Category::with('childrens')->latest()->get());
     }
 
     /**
@@ -24,9 +26,20 @@ class CategoryController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'parent_id' => 'nullable|exists:categories,id',
+            'description' => 'nullable|string',
+        ]);
+
+        $category = Category::create($validated);
+
+        return response()->json([
+            'message' => 'La categorie a été ajouté avec succes !',
+            'data' => new CategoryResource($category->load('parent', 'childrens')),
+        ]);
     }
 
     /**
@@ -37,7 +50,7 @@ class CategoryController extends Controller
      */
     public function show(Category $category)
     {
-        //
+        return new CategoryResource($category->load('parent', 'childrens'));
     }
 
     /**
@@ -49,7 +62,18 @@ class CategoryController extends Controller
      */
     public function update(Request $request, Category $category)
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string',
+            'parent_id' => 'nullable|exists:categories,id',
+            'description' => 'nullable|string',
+        ]);
+
+        $category->update($validated);
+
+        return response()->json([
+            'message' => 'La categorie a été modifiée avec succes !',
+            'data' => new CategoryResource($category->load('parent', 'childrens')),
+        ]);
     }
 
     /**
@@ -58,8 +82,12 @@ class CategoryController extends Controller
      * @param  \App\Models\Category  $category
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Category $category)
+    public function destroy(Category $category) : JsonResponse
     {
-        //
+        $category->delete();
+        return response()->json([
+            'message' => 'La categorie a été supprimée avec succes !',
+        ]);
     }
+ 
 }

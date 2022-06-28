@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\API\V1;
 
-use App\Http\Controllers\Controller;
 use App\Models\Question;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use App\Http\Resources\QuestionResource;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class QuestionController extends Controller
 {
@@ -15,7 +17,7 @@ class QuestionController extends Controller
      */
     public function index()
     {
-        //
+        return QuestionResource::collection(Question::latest()->get());
     }
 
     /**
@@ -24,9 +26,19 @@ class QuestionController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request) : JsonResponse
     {
-        //
+        $validated = $request->validate([
+            'wording' => 'required|text',
+            'quiz_id' => 'required|integer|exists:quizzes,id',
+        ]);
+
+        $question = Question::create($validated);
+
+        return response()->json([
+            'message' => 'La question a été ajoutée avec succes !',
+            'data' => new QuestionResource($question->load('quiz')),
+        ]);
     }
 
     /**
@@ -35,11 +47,10 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function show(Question $question)
+    public function show(Question $question) : QuestionResource
     {
-        //
+        return new QuestionResource($question->load('quiz'));
     }
-
     /**
      * Update the specified resource in storage.
      *
@@ -47,9 +58,19 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Question $question)
+    public function update(Request $request, Question $question) : JsonResponse
     {
-        //
+        $validated = $request->validate([
+            'wording' => 'required|text',
+            'quiz_id' => 'required|integer|exists:quizzes,id',
+        ]);
+
+        $question->update($validated);
+
+        return response()->json([
+            'message' => 'La question a été modifiée avec succes !',
+            'data' => new QuestionResource($question->load('quiz')),
+        ]);
     }
 
     /**
@@ -58,8 +79,13 @@ class QuestionController extends Controller
      * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Question $question)
+    public function destroy(Question $question) : JsonResponse
     {
-        //
+        $question->delete();
+
+        return response()->json([
+            'message' => 'La question a été supprimée avec succes !',
+        ]);
     }
+
 }

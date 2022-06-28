@@ -24,12 +24,7 @@ class DatabaseSeeder extends Seeder
     ]);
 
     \App\Models\Course::factory()->count(30)->create()->each(function (\App\Models\Course $course) {
-      $course->quizzes()->saveMany(Quiz::factory()->count(10)->make()->each(function ($quiz) {
-        \App\Models\Question::create([
-          'quiz_id' => $quiz->id,
-          'wording' => 'Qui est le président de la République ?',
-        ]);
-      }));
+      $course->quizzes()->saveMany(Quiz::factory()->count(10)->make());
     });
   }
 }
